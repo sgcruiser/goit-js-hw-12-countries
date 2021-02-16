@@ -9,37 +9,42 @@ function makesCountrySearch(event) {
   refs.resultSearch.innerHTML = '';
   const countrySearch = event.target.value;
 
-  countriesApi(countrySearch).then(data => {
-    if (data.status === 404) {
-      const arg = 'error';
+  if (countrySearch !== '') {
+    return countriesApi(countrySearch).then(checksQueryResult);
+  }
+}
 
-      renderingQuery(arg);
-      return;
-    }
+function checksQueryResult(data) {
+  if (data.status === 404) {
+    const arg = 'error';
 
-    if (data.length > 10) {
-      const arg = 'notice';
+    renderingQuery(arg);
+    return;
+  }
 
-      renderingQuery(arg, data.length);
-      return;
-    }
+  if (data.length > 10) {
+    const arg = 'notice';
 
-    if (data.length >= 2 && data.length <= 10) {
-      const arg = 'info';
-      const markup = listCountries(data);
+    renderingQuery(arg, data.length);
+    return;
+  }
 
-      renderingQuery(arg, data.length, markup);
-      return;
-    }
+  if (data.length >= 2 && data.length <= 10) {
+    const arg = 'info';
+    const markup = listCountries(data);
 
-    if (data.length === 1) {
-      const arg = 'success';
-      const markup = country(data);
+    renderingQuery(arg, data.length, markup);
+    return;
+  }
 
-      renderingQuery(arg, data.length, markup);
-      return;
-    }
-  });
+  if (data.length === 1) {
+    const arg = 'success';
+    const markup = country(data);
+
+    renderingQuery(arg, data.length, markup);
+    refs.inputSearch.value = '';
+    return;
+  }
 }
 
 export default makesCountrySearch;
